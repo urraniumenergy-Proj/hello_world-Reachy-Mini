@@ -1,0 +1,56 @@
+# HuggingFace Spaces demo — runs the full dashboard with a simulated robot.
+#
+# Build:  docker build -f Dockerfile.demo -t hw-demo .
+# Run:    docker run -p 8042:8042 hw-demo
+# Browse: http://localhost:8042
+
+FROM python:3.12-slim
+
+# ── System dependencies ──────────────────────────────────────────
+# gcc + libc6-dev  — webrtcvad C extension compilation
+# libosmesa6-dev   — headless OpenGL for MuJoCo (no GPU needed)
+# libgl1           — GL shared libs (MuJoCo runtime dependency)
+# libglib2.0-0     — GLib2 (OpenCV runtime needs libgthread-2.0.so)
+# libportaudio2    — PortAudio (sounddevice library, daemon audio init)
+# tmux             — shell tab uses shared tmux sessions
+# curl             — startup script health checks
+# supervisor       — manages daemon + app lifecycle
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc libc6-dev \
+    libosmesa6-dev \
+    libgl1 \
+    libglib2.0-0 \
+    libportaudio2 \
+    tmux \
+    curl \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+# MuJoCo headless rendering — OSMesa software renderer, no GPU required
+ENV MUJOCO_GL=osmesa
+# Demo mode — skips hardware media (camera/audio) in app init
+ENV DEMO_MODE=1
+
+# HuggingFace Spaces requires non-root user with uid 1000
+RUN useradd -m -u 1000 user
+USER user
+ENV PATH="/home/user/.local/bin:${PATH}"
+
+WORKDIR /home/user/app
+
+# Install MuJoCo + reachy-mini SDK (provides reachy-mini-daemon command)
+RUN pip install --no-cache-dir --user mujoco "reachy-mini"
+
+# Copy the hello_world app and install as editable package
+# (editable so the daemon discovers it via entry points)
+COPY --chown=user:user . .
+RUN pip install --no-cache-dir --user -e .
+
+# Make startup script executable
+RUN chmod +x demo-start.sh
+
+# The app serves on port 8042 (HF proxy forwards to this)
+EXPOSE 8042
+
+# Supervisor manages: (1) daemon in sim mode, (2) startup script
+CMD ["supervisord", "-n", "-c", "/home/user/app/supervisord.demo.conf"]
