@@ -1,0 +1,307 @@
+/* Hello World — Reachy Mini DevKit Landing Page */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #0a0a0f;
+    --bg-card: #14141f;
+    --accent: #7c5cfc;
+    --accent-light: #a78bfa;
+    --text: #e2e0ea;
+    --text-muted: #9490a6;
+    --text-dim: #6b6681;
+    --radius: 14px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    min-height: 100vh;
+}
+
+/* ── Nav ─────────────────────────────── */
+
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(124, 92, 252, 0.1);
+    padding: 0.75rem 2rem;
+}
+
+.nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-brand { font-weight: 700; font-size: 1.05rem; }
+
+.nav-links { display: flex; align-items: center; gap: 1.5rem; }
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent-light); }
+
+.nav-docs {
+    background: rgba(124, 92, 252, 0.15) !important;
+    border: 1px solid rgba(124, 92, 252, 0.3);
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 6px;
+    color: var(--accent-light) !important;
+}
+
+/* ── Hero ────────────────────────────── */
+
+.hero {
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 0%, rgba(124, 92, 252, 0.15) 0%, transparent 60%);
+}
+
+.hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(124, 92, 252, 0.15);
+    border: 1px solid rgba(124, 92, 252, 0.3);
+    color: var(--accent-light);
+    padding: 0.3rem 0.9rem;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat strong {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 800;
+    display: block;
+    line-height: 1.2;
+}
+
+.tech-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+}
+
+.tech-row span {
+    background: rgba(124, 92, 252, 0.1);
+    border: 1px solid rgba(124, 92, 252, 0.2);
+    color: var(--accent-light);
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+}
+
+.hero-img {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.hero-img img {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid rgba(124, 92, 252, 0.2);
+    box-shadow: 0 4px 60px rgba(124, 92, 252, 0.12);
+}
+
+/* ── Showcase (gallery grid) ─────────── */
+
+.showcase {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.card {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid rgba(124, 92, 252, 0.12);
+    background: var(--bg-card);
+    transition: transform 0.25s, border-color 0.25s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(124, 92, 252, 0.35);
+}
+
+.wide { grid-column: 1 / -1; }
+
+.card img,
+.card video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.9rem 1.1rem;
+    background: linear-gradient(transparent, rgba(10, 10, 15, 0.92));
+}
+
+.label strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.label span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ── Install ─────────────────────────── */
+
+.install {
+    padding: 4rem 2rem 5rem;
+    text-align: center;
+}
+
+.install h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+}
+
+.install-row {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.install-step {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    min-width: 260px;
+}
+
+.step-n {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.install-step code {
+    display: block;
+    background: rgba(124, 92, 252, 0.1);
+    color: var(--accent-light);
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+    margin-bottom: 0.4rem;
+}
+
+.step-note {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+/* ── Footer ──────────────────────────── */
+
+.footer {
+    text-align: center;
+    padding: 2rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer p { color: var(--text-dim); font-size: 0.82rem; }
+.footer strong { color: var(--text); }
+.footer a { color: var(--accent-light); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+.footer-sub { margin-top: 0.4rem; font-size: 0.72rem; opacity: 0.6; }
+
+/* ── Responsive ──────────────────────── */
+
+@media (max-width: 900px) {
+    .hero h1 { font-size: 2.5rem; }
+    .nav-links a:not(.nav-docs) { display: none; }
+}
+
+@media (max-width: 600px) {
+    .hero { padding: 3rem 1rem 2rem; }
+    .hero h1 { font-size: 2rem; }
+    .stats { gap: 1.5rem; }
+    .stat strong { font-size: 1.1rem; }
+    .grid { grid-template-columns: 1fr; }
+    .wide { grid-column: auto; }
+    .install-row { flex-direction: column; align-items: center; }
+}
