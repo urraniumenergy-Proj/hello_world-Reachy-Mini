@@ -1,0 +1,26 @@
+# Landing page assets (not needed in demo container)
+demo_video.mp4
+frames/
+screenshots/
+docs.html
+style.css
+README.md
+index.html
+README.demo.md
+
+# Git
+.git/
+.gitattributes
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Media (runtime-generated, not needed in image)
+media/
+
+# Settings (runtime-generated on Reachy, not needed in image)
+settings.json
