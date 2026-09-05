@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation — Hello World DevKit</title>
+<style>
+/* ===== Theme variables (matching app dark theme) ===== */
+:root {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #252525;
+    --bg-elevated: #1a1a2e;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a0a0a0;
+    --text-muted: #888;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --accent-20: rgba(99, 102, 241, 0.2);
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --border: #333;
+    --border-subtle: #2a2a2a;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* ===== Top bar ===== */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 15, 15, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.topbar-brand {
+    font-weight: 700;
+    color: var(--accent-hover);
+    font-size: 14px;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.topbar-brand:hover { color: #fff; }
+.topbar-home {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    white-space: nowrap;
+    margin-left: auto;
+}
+.topbar-home:hover { color: var(--accent-hover); border-color: var(--accent); }
+
+/* ===== Help container ===== */
+.help-container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 50px);
+}
+
+/* ===== Search ===== */
+.help-tab-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    flex-shrink: 0;
+}
+.help-search {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.82rem;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.help-search:focus { border-color: var(--accent); }
+.help-search::placeholder { color: var(--text-muted); }
+
+/* ===== Category pills ===== */
+.help-categories {
+    display: flex;
+    gap: 0.35rem;
+    padding: 0 0 0.75rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+.help-category {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+.help-category.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+.help-category:hover:not(.active) {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+}
+.help-category-count {
+    opacity: 0.6;
+    font-size: 0.65rem;
+    margin-left: 0.15rem;
+}
+
+/* ===== Section headers ===== */
+.help-section-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 1.25rem 0 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+.help-section-header:first-child { margin-top: 0; }
+
+/* ===== Topic cards ===== */
+.help-topic {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    margin-bottom: 0.4rem;
+    transition: border-color 0.15s;
+}
+.help-topic[open] { border-color: var(--accent-20); }
+.help-topic summary {
+    cursor: pointer;
+    padding: 0.6rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    list-style: none;
+}
+.help-topic summary::-webkit-details-marker { display: none; }
+.help-topic summary::before { content: ''; display: none; }
+.help-topic-title {
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+}
+.help-topic-summary {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+.help-topic[open] .help-topic-title { color: var(--accent); }
+.help-topic-snippet {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-top: 0.2rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--accent-20);
+    font-style: italic;
+}
+
+/* ===== Topic body (rendered markdown) ===== */
+.help-topic-body {
+    padding: 0 0.85rem 0.75rem;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--text-primary);
+}
+.help-topic-body p { margin: 0.4rem 0; }
+.help-topic-body ul, .help-topic-body ol {
+    margin: 0.3rem 0;
+    padding-left: 1.25rem;
+}
+.help-topic-body li { margin: 0.15rem 0; }
+.help-topic-body strong { color: var(--text-primary); }
+.help-topic-body code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.75rem;
+    background: var(--bg-tertiary);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    color: var(--accent);
+}
+.help-topic-body pre {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.8rem;
+    overflow-x: auto;
+    margin: 0.5rem 0;
+}
+.help-topic-body pre code {
+    background: none;
+    padding: 0;
+    color: var(--text-primary);
+}
+
+/* ===== Tags ===== */
+.help-tags {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    padding: 0 0.85rem 0.5rem;
+}
+.help-tag {
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    font-size: 0.62rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+}
+
+/* ===== Empty/highlight ===== */
+.help-empty {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 3rem;
+    font-size: 0.85rem;
+}
+.help-highlight {
+    background: rgba(250, 204, 21, 0.3);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+}
+
+/* ===== Help body scrollable area ===== */
+.help-tab-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ===== Topic count badge ===== */
+.topic-count {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+/* ===== Footer ===== */
+.foot {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+}
+.foot a { color: var(--accent-hover); text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+    .help-container { padding: 0 12px 60px; }
+    .topbar { flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <a href="index.html" class="topbar-brand">Hello World DevKit</a>
+    <a href="index.html" class="topbar-home">&larr; Home</a>
+</div>
+
+<div class="help-container">
+    <div class="help-tab-header">
+        <input type="text" class="help-search" id="helpSearch" placeholder="Search help topics..." autocomplete="off" />
+        <span class="topic-count" id="topicCount"></span>
+    </div>
+
+    <div class="help-categories" id="helpCategories"></div>
+
+    <div class="help-tab-body" id="helpTabBody"></div>
+</div>
+
+<div class="foot">
+    Built with vanilla Python + JS &mdash; no framework, no bundler<br>
+    <a href="index.html">Home</a> &bull;
+    <a href="https://huggingface.co/spaces/panny247/hello_world">HuggingFace Space</a> &bull;
+    <a href="https://www.pollen-robotics.com/reachy-mini/">Reachy Mini</a>
+</div>
+
+<!-- Pre-baked help topics (43 conceptual topics from help.py) -->
+<script id="topics-data" type="application/json">
+[
+  {
+    "id": "what-is-hello-world",
+    "category": "Getting Started",
+    "title": "What is Hello World?",
+    "summary": "A community dashboard for Reachy Mini with AI conversation, vision, and motion control.",
+    "body": "Hello World is an open-source web dashboard for **Reachy Mini**, a small expressive robot head by Pollen Robotics. It runs directly on Reachy's onboard Raspberry Pi CM4 and provides:\n\n- **Voice conversation** with AI (multi-provider: OpenAI, Anthropic, Google, Groq, Ollama, and more)\n- **Real-time vision** with YOLO object detection, pose estimation, and segmentation\n- **81 emotions** and **19 dances** for expressive robot behavior\n- **MuJoCo 3D simulation** of the robot head\n- **Timers, alarms, and ambient sounds** with custom sound upload\n- **Music playback**, snapshots, video/audio recording\n- **Joystick control** for manual head movement\n\nAccess the dashboard at `http://reachy:8042` from any device on the same network.",
+    "tags": [
+      "overview",
+      "introduction",
+      "about",
+      "dashboard"
+    ]
+  },
+  {
+    "id": "dashboard-tabs",
+    "category": "Getting Started",
+    "title": "Dashboard Tabs Overview",
+    "summary": "Navigate the main tabs: Status, Telemetry, Moves, Conversation, Media, Timers, Settings.",
+    "body": "The dashboard has several tabs across the top:\n\n- **Status** — System stats (CPU, RAM, disk, network), uptime, head telemetry\n- **Telemetry** — Real-time charts of system metrics\n- **Moves** — Gallery of 81 emotions, 19 dances, and 6 oscillation patterns with preview\n- **Conversation** — Voice transcription, AI chat, and listener controls\n- **Media** — Recordings, snapshots, music library\n- **Timers** — Countdown timers, alarms, and ambient sound playback\n- **Settings** — API keys, audio, vision, UI configuration\n\nClick any tab to switch. Your last active tab is remembered across sessions.",
+    "tags": [
+      "tabs",
+      "navigation",
+      "ui",
+      "layout"
+    ]
+  },
+  {
+    "id": "api-keys-setup",
+    "category": "Getting Started",
+    "title": "Setting Up AI Providers",
+    "summary": "Add API keys for OpenAI, Anthropic, Google, Groq, or connect to local Ollama.",
+    "body": "To use AI features (voice conversation, vision analysis), you need at least one AI provider key:\n\n1. Go to **Settings** tab\n2. Find the **API Keys** section\n3. Enter your key for any supported provider\n4. The system auto-detects which capabilities each provider offers (LLM, STT, TTS, VLM)\n\n**Supported providers**: OpenAI, Anthropic, Google (Gemini), Groq, DeepSeek, ElevenLabs, Ollama (local).\n\nFor **Ollama** (free, local models): enter the server URL (e.g. `http://localhost:11434`) instead of an API key. Ollama provides LLM and VLM capabilities without any cloud costs.\n\nKeys are stored locally in `settings.json` on the robot and never sent anywhere except the provider's API.",
+    "tags": [
+      "api",
+      "keys",
+      "providers",
+      "setup",
+      "openai",
+      "anthropic",
+      "ollama",
+      "groq"
+    ]
+  },
+  {
+    "id": "first-conversation",
+    "category": "Getting Started",
+    "title": "Your First Conversation with Reachy",
+    "summary": "Start talking to Reachy using voice or text with the AI assistant.",
+    "body": "Once you have an API key configured:\n\n1. Go to the **Conversation** tab\n2. Select your preferred **STT** (speech-to-text), **LLM** (chat), and **TTS** (text-to-speech) providers/models\n3. Click **Start Listener** to begin voice input, or type in the chat box\n4. Reachy will respond with speech and expressive head movements\n\nReachy has 24 built-in tools: playing emotions/dances, taking snapshots, setting timers, playing music, checking system status, creating visual content on the scratchpad, and more. Just ask naturally.\n\n**Tip**: Adjust the confidence and volume thresholds in Settings if Reachy responds to background noise.",
+    "tags": [
+      "conversation",
+      "voice",
+      "chat",
+      "assistant",
+      "getting started"
+    ]
+  },
+  {
+    "id": "making-reachy-move",
+    "category": "Getting Started",
+    "title": "Making Reachy Move",
+    "summary": "Use emotions, dances, oscillation patterns, and the joystick to animate Reachy.",
+    "body": "Reachy can move in several ways:\n\n**Emotions** (81 animations): Go to the Moves tab and click any emotion card to play it. Categories include happy, sad, angry, surprised, thinking, and more.\n\n**Dances** (19 patterns): Rhythmic head movements like nodding, swaying, and bobbing.\n\n**Oscillation** (6 patterns): Continuous idle animations — sway, nod, circle, breathe, figure8, lookAround. Great for making Reachy look alive when idle.\n\n**Joystick**: Use the floating joystick panel for direct head control — 5 axes (yaw, pitch, roll, body rotation, vertical).\n\n**Voice**: During conversation, Reachy automatically plays emotions matching its responses.",
+    "tags": [
+      "movement",
+      "emotions",
+      "dances",
+      "oscillation",
+      "joystick",
+      "animation"
+    ]
+  },
+  {
+    "id": "floating-panels",
+    "category": "Getting Started",
+    "title": "Floating Panels",
+    "summary": "Camera view and joystick controls as draggable floating windows.",
+    "body": "Two panels can float on top of any tab:\n\n- **Camera Panel** — Live video feed from Reachy's camera or MuJoCo simulation. Toggle between camera, simulation, both, or off in Settings.\n- **Joystick Panel** — 5-axis head control with a virtual joystick. Controls yaw (left/right), pitch (up/down), roll (tilt), body rotation, and vertical position.\n\nBoth panels are draggable, resizable, and remember their position across sessions.",
+    "tags": [
+      "panels",
+      "camera",
+      "joystick",
+      "floating",
+      "ui"
+    ]
+  },
+  {
+    "id": "joystick-controls",
+    "category": "Controls",
+    "title": "Joystick Controls",
+    "summary": "5-axis head control with yaw, pitch, roll, body rotation, and vertical translation.",
+    "body": "The joystick provides 5 axes of control:\n\n- **Yaw**: Left/right rotation (-50 to +50 degrees)\n- **Pitch**: Up/down tilt (-25 to +25 degrees)\n- **Roll**: Head tilt (-30 to +35 degrees)\n- **Body Rotation**: Full body yaw (-160 to +160 degrees)\n- **Vertical (Z)**: Head height adjustment (-4cm to +4cm)\n\nThe joystick sends head pose commands via WebSocket at the configured update rate (default 15Hz). Release the joystick to return to center.",
+    "tags": [
+      "joystick",
+      "controls",
+      "axes",
+      "head",
+      "movement"
+    ]
+  },
+  {
+    "id": "motor-modes",
+    "category": "Controls",
+    "title": "Motor Modes",
+    "summary": "Three motor modes: Enabled (full control), Disabled (limp), Gravity Compensation (springy).",
+    "body": "Reachy's motors have three modes:\n\n- **Enabled**: Full torque, robot holds position and responds to commands. Required for emotions, dances, and joystick.\n- **Disabled**: Motors are off, head is limp. Safe for physical interaction.\n- **Gravity Compensation**: Motors resist gravity but allow manual positioning. The head feels springy and can be gently moved by hand.\n\nChange modes from Settings or via the API. Motors must be **enabled** for any movement commands to work.",
+    "tags": [
+      "motors",
+      "mode",
+      "enabled",
+      "disabled",
+      "gravity"
+    ]
+  },
+  {
+    "id": "voice-setup",
+    "category": "Voice & AI",
+    "title": "Setting Up Voice Conversation",
+    "summary": "Configure speech-to-text, LLM, and text-to-speech for voice interaction.",
+    "body": "Voice conversation requires three AI components:\n\n1. **STT (Speech-to-Text)**: Converts your speech to text. Providers: OpenAI (gpt-4o-transcribe), Groq (whisper-large-v3-turbo).\n2. **LLM (Language Model)**: Generates responses. Providers: Anthropic (Claude), OpenAI (GPT), Google (Gemini), Ollama (local), and more.\n3. **TTS (Text-to-Speech)**: Speaks responses aloud. Providers: OpenAI (gpt-4o-mini-tts), Google (Gemini TTS).\n\nConfigure each in the **Settings** tab under the Conversation section. The system routes through **LiteLLM** for unified provider access.\n\n**Language**: The `stt_language` setting controls the speech recognition language (ISO 639-1 code, e.g. `en`, `fr`, `de`). Defaults to English (`en`). Set to empty for auto-detect (multilingual mode). See the *Multilingual Support* topic for details.\n\n**Audio routing**: Choose between robot mic/speaker or browser mic/speaker for input and output independently.",
+    "tags": [
+      "voice",
+      "stt",
+      "tts",
+      "llm",
+      "conversation",
+      "speech",
+      "microphone",
+      "language"
+    ]
+  },
+  {
+    "id": "multilingual-support",
+    "category": "Voice & AI",
+    "title": "Multilingual Support",
+    "summary": "Hello World supports speech recognition in 99 languages via Whisper.",
+    "body": "The speech-to-text engine (Whisper) supports **99 languages**. By default, the `stt_language` setting is set to `en` (English) to prevent false transcriptions from background noise.\n\n**To use a different language:**\n- In Settings, change `stt_language` to an ISO 639-1 code (e.g. `fr` for French, `de` for German, `es` for Spanish, `ja` for Japanese)\n- Set it to an empty string for auto-detection (Whisper will detect the language per utterance)\n\n**Common language codes:** en (English), fr (French), de (German), es (Spanish), it (Italian), pt (Portuguese), nl (Dutch), ja (Japanese), ko (Korean), zh (Chinese), ar (Arabic), hi (Hindi), ru (Russian), pl (Polish), sv (Swedish), tr (Turkish)\n\n**Why default to English?** Without a language hint, Whisper sometimes hallucinates text in random languages when it hears ambiguous sounds or background noise. Pinning the language eliminates this.",
+    "tags": [
+      "multilingual",
+      "language",
+      "stt",
+      "whisper",
+      "french",
+      "german",
+      "spanish",
+      "i18n",
+      "international"
+    ]
+  },
+  {
+    "id": "custom-system-prompt",
+    "category": "Voice & AI",
+    "title": "Custom System Prompts",
+    "summary": "Override Reachy's default personality and instructions with a custom system prompt.",
+    "body": "By default, Reachy uses a built-in system prompt that defines its personality and capabilities. You can override this in Settings:\n\n- Find **System Prompt** in the Conversation settings\n- Enter your custom instructions (leave empty to use the default)\n- Changes take effect on the next conversation turn\n\nThe default prompt instructs Reachy to be concise, expressive (always play emotions), and format output for TTS (no markdown, numbers as words).",
+    "tags": [
+      "prompt",
+      "personality",
+      "system",
+      "custom",
+      "instructions"
+    ]
+  },
+  {
+    "id": "vision-modes",
+    "category": "Vision",
+    "title": "Vision Modes: CM4 vs WebGPU",
+    "summary": "Two inference backends for object detection — local Pi or browser GPU.",
+    "body": "Reachy supports two vision inference modes:\n\n**CM4 Mode** (local): Runs YOLO on the Pi's CPU via ONNX Runtime. Limited to nano models (~2-8 FPS). No extra hardware needed.\n\n**WebGPU Mode** (browser): Offloads inference to your browser's GPU via WebGPU/ONNX Web Runtime. Supports all model sizes, much faster on modern GPUs (30-60 FPS). Requires a WebGPU-capable browser.\n\nSwitch modes in Settings > Vision. CM4 mode is best for standalone operation; WebGPU mode is best when you have a laptop or desktop with a good GPU connected.",
+    "tags": [
+      "vision",
+      "cm4",
+      "webgpu",
+      "yolo",
+      "inference",
+      "gpu"
+    ]
+  },
+  {
+    "id": "snapshots-recordings",
+    "category": "Media",
+    "title": "Snapshots and Recordings",
+    "summary": "Capture images and record video/audio from Reachy's camera and microphone.",
+    "body": "**Snapshots**: Click the camera button or ask Reachy to take a snapshot. Images are saved to the media folder and visible in the Media tab. If a VLM is configured, snapshots are automatically described.\n\n**Video Recording**: Start/stop recording from the Robot tab or via voice command. Recordings use the robot's camera.\n\n**Audio Recording**: Record from the robot's microphone for sound capture.\n\nAll media files are accessible from the **Media** tab with thumbnails and playback controls.",
+    "tags": [
+      "snapshot",
+      "recording",
+      "video",
+      "audio",
+      "camera",
+      "media"
+    ]
+  },
+  {
+    "id": "music-playback",
+    "category": "Media",
+    "title": "Music Playback",
+    "summary": "Upload and play music through Reachy's speaker with volume control.",
+    "body": "Upload music files (MP3, WAV) to Reachy's music library. Play them from the Media tab or ask Reachy via voice (\"play some music\").\n\nThe AI can list available tracks and play specific ones using the `list_music` and `play_music` tools.\n\nMusic volume is controlled independently from speech volume via the `music_volume` setting. The master volume applies on top of all channels.",
+    "tags": [
+      "music",
+      "playback",
+      "upload",
+      "speaker",
+      "audio"
+    ]
+  },
+  {
+    "id": "timers-guide",
+    "category": "Timers & Sounds",
+    "title": "Countdown Timers",
+    "summary": "Set named countdown timers that play a sound and announce when done.",
+    "body": "Set a timer from the Timers tab or by voice (\"set a timer for 5 minutes called pasta\").\n\nWhen a timer expires:\n- A configurable sound plays on the robot speaker\n- Reachy announces the timer name via TTS\n- A celebration emotion plays\n\nTimers can be paused, resumed, or cancelled. Expired/cancelled timers are auto-cleaned after 30 seconds. Timer state is in-memory (lost on restart).\n\nChoose from bundled timer sounds (ding, success, bell) or upload your own custom sounds.",
+    "tags": [
+      "timer",
+      "countdown",
+      "sound",
+      "notification"
+    ]
+  },
+  {
+    "id": "alarms-guide",
+    "category": "Timers & Sounds",
+    "title": "Alarms",
+    "summary": "Set recurring or one-shot alarms with day-of-week scheduling.",
+    "body": "Set alarms from the Timers tab or by voice (\"set an alarm for 7 AM called wake up\").\n\n**One-shot alarms**: Trigger once at the specified time, then auto-disable.\n**Recurring alarms**: Set specific days (mon, tue, etc.) to repeat weekly.\n\nWhen an alarm triggers: a sound plays, Reachy announces the alarm name, and a welcoming emotion plays.\n\nAlarms can be snoozed (default 5 minutes), dismissed, toggled on/off, or deleted. Alarm definitions persist in settings.json across restarts.",
+    "tags": [
+      "alarm",
+      "schedule",
+      "recurring",
+      "snooze",
+      "wake"
+    ]
+  },
+  {
+    "id": "ambient-sounds",
+    "category": "Timers & Sounds",
+    "title": "Ambient Sounds",
+    "summary": "Loop ambient soundscapes (rain, ocean, forest) with optional sleep timer.",
+    "body": "Play ambient sounds from the Timers tab or by voice (\"play rain sounds for 30 minutes\").\n\n**Bundled sounds**: Rain, Ocean, Forest, Crickets, Fireplace, Wind, White Noise, Pink Noise, Brown Noise.\n\nFeatures:\n- Loops seamlessly by re-reading the audio file\n- Optional sleep timer auto-stops after N minutes\n- Pauses automatically during TTS playback (yields the speaker)\n- Volume adjustable independently via ambient_volume setting\n- Upload custom ambient loops (WAV/MP3, up to 20MB)\n\nAmbient and music share the speaker pipeline — starting one stops the other.",
+    "tags": [
+      "ambient",
+      "sounds",
+      "rain",
+      "ocean",
+      "forest",
+      "sleep",
+      "noise",
+      "loop"
+    ]
+  },
+  {
+    "id": "scratchpad-overview",
+    "category": "Media",
+    "title": "Scratchpad — Visual Content",
+    "summary": "Create rich HTML visualizations with charts, diagrams, code, and tables.",
+    "body": "The **Scratchpad** tab displays rich HTML content created by the AI or via the API. It supports:\n\n- **Chart.js** charts (bar, line, doughnut, etc.)\n- **Mermaid** diagrams (flowcharts, sequence, state, etc.)\n- **Prism** syntax-highlighted code blocks (Python, JavaScript, Bash, JSON)\n- **KaTeX** mathematical equations\n- **Markdown** rendering\n- Themed cards, badges, tables, and grid layouts\n\nContent is theme-aware — it switches between dark and light mode with the dashboard.\n\n**Entries are organized by project** and searchable by title or project name. When the AI creates a new entry, the dashboard auto-switches to the Scratchpad tab.\n\nAsk the AI to create visual content: \"Show me a chart of...\", \"Draw a diagram of...\", \"Create a comparison table for...\"",
+    "tags": [
+      "scratchpad",
+      "visualization",
+      "chart",
+      "diagram",
+      "mermaid",
+      "code"
+    ]
+  },
+  {
+    "id": "shell-terminal",
+    "category": "Controls",
+    "title": "Shell Terminal",
+    "summary": "Access the robot's command line directly from the dashboard.",
+    "body": "The **Shell** tab provides two modes for accessing the robot's Linux command line:\n\n### Terminal Mode (xterm.js)\nA full interactive terminal using xterm.js connected via WebSocket PTY. This gives you a real terminal experience with:\n- Full color support (256 colors + true color)\n- Cursor positioning, scrollback (5000 lines)\n- Arrow keys, tab completion, Ctrl+C, etc.\n- Automatic terminal resizing when the browser window changes\n\nToggle the switch to connect/disconnect. The terminal attaches to a shared `tmux` session named `shared`, so your session persists across disconnects.\n\n### Tmux Mode (REST polling)\nA lightweight alternative that polls the same tmux session via REST API. Useful on slower connections or when you just need to send a quick command:\n- Type in the command field and click Send (or press Enter)\n- Use the shortcut buttons: ^C (interrupt), ^D (EOF), ^L (clear), arrows\n- Output refreshes every second with full ANSI color rendering\n\n**Both modes share the same `tmux` session** — switch freely between them without losing your work.",
+    "tags": [
+      "shell",
+      "terminal",
+      "tmux",
+      "command",
+      "bash",
+      "pty",
+      "xterm",
+      "console"
+    ]
+  },
+  {
+    "id": "bluetooth-audio",
+    "category": "Controls",
+    "title": "Bluetooth Audio",
+    "summary": "Stream music and audio to Bluetooth speakers or headphones.",
+    "body": "Reachy can route audio output to Bluetooth A2DP speakers or headphones:\n\n1. **Pair a device**: Go to Settings and scan for nearby Bluetooth devices\n2. **Select audio output**: Set `audio_output` to `bluetooth` in Settings\n3. **Music streams at 48kHz** via A2DP for high quality playback\n\nWhen Bluetooth is selected, music and ambient sounds play through the Bluetooth device. Speech (TTS) can be routed to either the robot speaker or Bluetooth.\n\nThe intercom feature can also stream browser microphone audio to Bluetooth.",
+    "tags": [
+      "bluetooth",
+      "audio",
+      "speaker",
+      "a2dp",
+      "wireless"
+    ]
+  },
+  {
+    "id": "intercom-speak-through-robot",
+    "category": "Controls",
+    "title": "Speak Through Robot (Intercom)",
+    "summary": "Use your browser mic to speak through the robot's speaker in real time.",
+    "body": "The **Speak Through Robot** button (microphone icon in the Conversation tab header) streams your browser microphone audio directly to the robot's speaker in real time.\n\nThis is different from the voice listener — the intercom does not transcribe speech. It is a direct audio pass-through, like a walkie-talkie.\n\n**How it works:**\n1. Click the microphone/speak button in the Conversation tab header\n2. Grant browser microphone permission if prompted\n3. Speak — your voice plays through the robot's speaker immediately\n4. Click again to stop\n\nThe intercom uses the `/ws/intercom` WebSocket endpoint and streams 16kHz PCM audio.",
+    "tags": [
+      "intercom",
+      "speak",
+      "microphone",
+      "speaker",
+      "pass-through",
+      "walkie-talkie",
+      "browser mic"
+    ]
+  },
+  {
+    "id": "volume-channels",
+    "category": "Controls",
+    "title": "Volume Channels",
+    "summary": "Independent volume controls for master, music, speech, effects, and ambient sounds.",
+    "body": "Audio volume is controlled through multiple independent channels:\n\n- **Master Volume** (0-100, default 68): Scales all audio. Applied on top of per-channel volumes.\n- **Music Volume** (0-100, default 80): Controls music playback level.\n- **Ambient Volume** (0-100, default 15): Controls ambient sound loops (rain, ocean, etc.).\n- **Effects Volume** (0-100, default 80): Controls emotion and dance sound effects.\n- **Speech Volume** (0-100, default 80): Controls TTS voice output level.\n\nThe final volume for any source is: `master × channel × boost`. For example, TTS at master=68, speech=80 plays at 68% × 80% × 2.0 boost = 1.09× normal level.\n\nAdjust all volumes in **Settings > Audio**.",
+    "tags": [
+      "volume",
+      "master",
+      "music",
+      "speech",
+      "effects",
+      "ambient",
+      "audio",
+      "level"
+    ]
+  },
+  {
+    "id": "web-search",
+    "category": "Voice & AI",
+    "title": "Web Search Model Filter",
+    "summary": "Filter the LLM model list to only show models that support web search.",
+    "body": "The **Web Search** toggle in LLM settings is a **model filter**. When enabled, the model dropdown only shows models that support web search capabilities.\n\nCurrently supported providers: **Anthropic** (Claude 3.5+) and **Perplexity**.\n\nWhen a web-search-capable model is selected and the filter is on, the system automatically passes `web_search_options` to the provider during chat completions, allowing the AI to look up current information during conversations.\n\nIf you switch the filter off, all models are shown regardless of web search support.",
+    "tags": [
+      "web",
+      "search",
+      "filter",
+      "model",
+      "selection",
+      "chat"
+    ]
+  },
+  {
+    "id": "confidence-thresholds",
+    "category": "Voice & AI",
+    "title": "Confidence and Volume Thresholds",
+    "summary": "Fine-tune when Reachy responds to voice input and ignores background noise.",
+    "body": "Two thresholds control voice activation:\n\n**Confidence Threshold** (`conf_threshold`, default 40): Minimum confidence percentage from the speech-to-text engine. Higher values mean the engine must be more confident the audio is speech before sending it to the LLM. Raise this if Reachy responds to non-speech sounds.\n\n**Volume Threshold** (`vol_threshold`, default 40): Minimum volume level. Audio below this is ignored. Raise this in noisy environments to filter out background noise.\n\n**Mic Gain** (`mic_gain`, default 5.0, range 1-20): Amplifies the microphone signal before processing. Increase if your voice is too quiet for the thresholds.\n\nAdjust all three in **Settings**. Start with defaults and adjust if Reachy triggers on noise or misses your speech.",
+    "tags": [
+      "confidence",
+      "threshold",
+      "volume",
+      "noise",
+      "sensitivity",
+      "mic",
+      "gain",
+      "tuning"
+    ]
+  },
+  {
+    "id": "status-tab-charts",
+    "category": "Status & Telemetry",
+    "title": "Status Tab — System Charts",
+    "summary": "Nine real-time charts showing CPU, RAM, disk, network, WiFi, load, fan, and threads.",
+    "body": "The **Status** tab displays nine streaming charts updated at the configured stats rate (default 1Hz):\n\n- **CPU Temperature** (red line): GPU/SoC temperature in Celsius from `vcgencmd`. Normal: 40-65C. Warning above 80C (thermal throttling triggers at 85C).\n- **CPU Cores** (4 colored lines): Per-core usage percentage. Red=Core 0, Green=Core 1, Blue=Core 2, Yellow=Core 3. Sustained 100% on all cores means the system is at capacity.\n- **RAM** (3 colored lines): Memory breakdown. Purple=Used, Blue=Buffers, Green=Cached. The Pi CM4 has 3.7GB usable. Cached memory is available for applications.\n- **Disk** (yellow + red): Yellow line = local eMMC usage percentage. Red line = swap usage. The Pi has 14.6GB eMMC. Above 90% is critical.\n- **Network** (green + red): Green=download (RX), Red=upload (TX) in bytes/sec. Spikes during vision streaming or music playback.\n- **WiFi** (purple line): Signal strength as a percentage (0-100). Derived from dBm. Below 30% may cause connection issues.\n- **Load Average** (yellow line): 1-minute system load. Green when below 3, yellow at 3-4, red above 4 (exceeds core count). Sustained high load means the system is overloaded.\n- **Fan** (cyan line): Fan RPM. Only shown if a fan is detected.\n- **Threads** (purple + blue): Purple=app threads, Blue=daemon threads. Green below 60, yellow 60-100, red above 100.\n\nEach chart holds 60 data points. All data arrives via the `/ws/live` WebSocket — no polling.",
+    "tags": [
+      "status",
+      "charts",
+      "cpu",
+      "ram",
+      "disk",
+      "network",
+      "wifi",
+      "temperature",
+      "telemetry",
+      "load",
+      "fan",
+      "threads"
+    ]
+  },
+  {
+    "id": "telemetry-tab",
+    "category": "Status & Telemetry",
+    "title": "Telemetry Tab — Head Pose Charts",
+    "summary": "Nine interactive charts showing roll, pitch, yaw, position, antennas, and joint angles.",
+    "body": "The **Telemetry** tab shows real-time head pose data at the robot update rate (default 15Hz):\n\n**Rotation charts** (3 charts):\n- **Roll**: Head tilt, -20 to +20 degrees (asymmetric: left max 20deg, right max 17deg)\n- **Pitch**: Up/down tilt, -25 to +25 degrees\n- **Yaw**: Left/right rotation, -50 to +50 degrees\n\n**Position charts** (3 charts):\n- **X Position**: Left/right translation, -3 to +3 cm\n- **Y Position**: Forward/back translation, -3 to +3 cm\n- **Z Position**: Vertical (height), -4 to +4 cm\n\n**Other charts**:\n- **Antenna Right/Left**: Antenna positions, -179 to +179 degrees\n- **Joints**: All 7 Stewart platform joint angles on one multi-line chart\n\n**Color coding**: Lines change color based on how close the value is to its limit:\n- Green: below 50% of limit (safe)\n- Amber: 50-85% of limit (approaching boundary)\n- Red: above 85% of limit (near mechanical stop)\n\n**Interactive control**: Drag vertically on any rotation/position chart or scroll the mouse wheel to directly control that axis. Elastic resistance increases as you approach limits. Check **Return to center** to auto-reset on release.",
+    "tags": [
+      "telemetry",
+      "head",
+      "pose",
+      "roll",
+      "pitch",
+      "yaw",
+      "charts",
+      "joints",
+      "antenna",
+      "position",
+      "interactive"
+    ]
+  },
+  {
+    "id": "service-health",
+    "category": "Status & Telemetry",
+    "title": "Service Health Pills",
+    "summary": "Five status indicators showing system connectivity and health at a glance.",
+    "body": "The top of the Status tab shows colored health pills:\n\n- **WebSocket**: Connection to the app's live data stream. Green = connected.\n- **Daemon**: The reachy-mini-daemon API on port 8000. Green = reachable.\n- **Serial**: USB serial connection to the Dynamixel motor bus. Green = communicating.\n- **Zenoh**: The Zenoh middleware layer between daemon and SDK. Green = active.\n- **Thermal**: CPU thermal status. Green = normal. Red = throttled (CPU slowed to prevent overheating).\n\nHealth is checked every 30 seconds. A red pill means that subsystem needs attention. The issue count badge on the Status tab shows how many services have problems.\n\nBelow the pills you can see **uptime** (robot and daemon) and **top processes** sorted by CPU usage.",
+    "tags": [
+      "health",
+      "status",
+      "pills",
+      "websocket",
+      "daemon",
+      "serial",
+      "zenoh",
+      "thermal",
+      "monitoring"
+    ]
+  },
+  {
+    "id": "top-processes",
+    "category": "Status & Telemetry",
+    "title": "Top Processes",
+    "summary": "View the top CPU-consuming processes with known-process identification.",
+    "body": "The Status tab shows the top 10 processes by CPU usage, refreshed every 15 seconds.\n\nKnown processes are identified by name:\n- **Hello World** — this app\n- **Daemon** — the reachy-mini-daemon controlling motors and SDK\n- **Bluetooth** — the Bluetooth GATT service\n- **GPIO Monitor** — the GPIO shutdown daemon\n\nEach process shows CPU percentage and memory percentage. This helps identify what is consuming resources if the system feels slow.",
+    "tags": [
+      "processes",
+      "cpu",
+      "memory",
+      "status",
+      "monitoring"
+    ]
+  },
+  {
+    "id": "3d-simulation",
+    "category": "Controls",
+    "title": "3D Simulation (MuJoCo Viewer)",
+    "summary": "Interactive 3D robot model rendered with Three.js, driven by live pose data.",
+    "body": "The simulation shows a real-time 3D model of Reachy Mini rendered with **Three.js** and post-processing effects (bloom lighting, SMAA anti-aliasing).\n\n**What it shows**: The 3D model mirrors the real robot's head position and orientation in real time. As the robot moves (via joystick, emotions, or oscillation), the simulation updates at the configured rate (default 15Hz).\n\n**Controls**: Click and drag to orbit the camera. Scroll to zoom. The simulation shares a canvas between the Telemetry tab (full size) and the floating Camera panel (compact).\n\n**Skins**: Apply different textures to the robot model — select from built-in skins or the default appearance.\n\n**Scenes**: Change the background environment surrounding the robot.\n\n**Preview**: In the Moves tab, hovering over an emotion or dance card plays a preview animation on the 3D model without moving the real robot.\n\nSet `video_view` to `simulation` or `both` in Settings to show the 3D viewer.",
+    "tags": [
+      "simulation",
+      "3d",
+      "mujoco",
+      "threejs",
+      "model",
+      "viewer",
+      "skin",
+      "scene",
+      "preview"
+    ]
+  },
+  {
+    "id": "ai-pipeline",
+    "category": "Voice & AI",
+    "title": "AI Pipeline — End to End",
+    "summary": "How voice flows from microphone to spoken response: VAD, STT, LLM, TTS.",
+    "body": "The full voice pipeline flows through four stages:\n\n**1. Audio Capture**: Microphone audio (robot mic or browser mic) is captured as 16kHz PCM.\n\n**2. VAD (Voice Activity Detection)**: `webrtcvad` (aggressiveness level 2) processes 30ms frames. Speech must be at least 300ms long. Silence of 1 second ends an utterance. When speech is detected, Reachy's antennas wiggle.\n\n**3. STT (Speech-to-Text)**: The speech audio is sent to a cloud STT provider (OpenAI Whisper or Groq). The response includes text and a confidence score. If confidence is below `conf_threshold` or volume is below `vol_threshold`, the utterance is discarded.\n\n**4. LLM (Language Model)**: The text goes to the selected LLM with the system prompt, conversation history, and available tools. The LLM may call tools (play emotions, take snapshots, etc.) before or alongside its text response.\n\n**5. TTS (Text-to-Speech)**: The LLM's text response is sent to a TTS provider. Audio is routed to either the robot speaker (16kHz via SDK) or browser speaker (base64 WAV via WebSocket). A TTS lock ensures only one voice plays at a time.\n\nAll providers are accessed via **LiteLLM** for unified API compatibility. Configure providers and models in Settings.",
+    "tags": [
+      "pipeline",
+      "voice",
+      "vad",
+      "stt",
+      "llm",
+      "tts",
+      "end-to-end",
+      "flow",
+      "conversation",
+      "architecture"
+    ]
+  },
+  {
+    "id": "litellm-routing",
+    "category": "Voice & AI",
+    "title": "LiteLLM — Multi-Provider Routing",
+    "summary": "How LiteLLM enables switching between AI providers without code changes.",
+    "body": "Hello World uses **LiteLLM** as a unified interface to multiple AI providers. This means you can switch between OpenAI, Anthropic, Google, Groq, DeepSeek, and Ollama just by changing a dropdown — no code changes needed.\n\n**How it works**: Each provider has a prefix format (e.g. `anthropic/claude-haiku-4-5-20251001`). LiteLLM translates your request into the provider's native API format automatically.\n\n**Provider discovery**: Available models are discovered by making live API calls to each configured provider (cached for 10 minutes). The system checks which capabilities each provider supports: LLM, STT, TTS, and VLM.\n\n**Web search**: Some models support web search (Anthropic Claude 3.5+, Perplexity). Toggle the Web Search filter to show only these models.",
+    "tags": [
+      "litellm",
+      "provider",
+      "routing",
+      "multi-provider",
+      "openai",
+      "anthropic",
+      "google",
+      "groq",
+      "ollama"
+    ]
+  },
+  {
+    "id": "listener-details",
+    "category": "Voice & AI",
+    "title": "Voice Listener — How It Works",
+    "summary": "The headless listener runs VAD, manages speech detection, and handles the ignore tool.",
+    "body": "The **listener** is a background process that continuously monitors the microphone:\n\n**Starting**: Click **Start Listener** in the Conversation tab. The listener opens a connection to the robot microphone (or browser mic, depending on `audio_input` setting).\n\n**VAD parameters**:\n- Frame size: 30ms (480 samples at 16kHz)\n- Aggressiveness: 2 (moderate — filters most noise but catches normal speech)\n- Minimum speech duration: 300ms (prevents single clicks/pops from triggering)\n- Silence timeout: 1 second (how long to wait after speech stops before processing)\n\n**The ignore tool**: The LLM has a special `ignore` tool. When it hears background noise or speech not directed at it, it calls `ignore` instead of responding. This is called ~95% of the time in a typical environment. The ignore tool plays no emotion and produces no speech.\n\n**Mute behavior**: When Reachy is speaking (TTS active), the listener is temporarily muted to prevent Reachy from hearing and responding to its own voice.",
+    "tags": [
+      "listener",
+      "vad",
+      "speech",
+      "detection",
+      "ignore",
+      "mute",
+      "microphone",
+      "voice"
+    ]
+  },
+  {
+    "id": "vision-tasks",
+    "category": "Vision",
+    "title": "Vision Tasks Explained",
+    "summary": "Four detection modes: Detection, Pose, Segmentation, and Open Vocabulary.",
+    "body": "YOLO vision supports four tasks, each producing different output:\n\n**Detection** (default): Identifies objects from 80 COCO classes (person, car, cup, laptop, etc.). Draws bounding boxes with labels and confidence scores. Best for general scene understanding.\n\n**Pose Estimation**: Detects human body pose with 17 keypoints (nose, eyes, ears, shoulders, elbows, wrists, hips, knees, ankles). Draws a skeleton overlay connecting the keypoints. Useful for gesture recognition and activity monitoring.\n\n**Instance Segmentation**: Draws pixel-level masks around each detected object, colored by class. More precise than bounding boxes — you see the exact shape of each object.\n\n**Open Vocabulary**: Type any text prompt (e.g. \"red coffee mug\") and the model finds matching objects. Not limited to the 80 COCO classes — it can find anything you describe. Uses a separate YOLO-World model.\n\nSwitch tasks in the Conversation tab under **YOLO Vision**. Each task has nano, small, and medium model sizes. Larger models are more accurate but slower.",
+    "tags": [
+      "vision",
+      "detection",
+      "pose",
+      "segmentation",
+      "open vocabulary",
+      "yolo",
+      "coco",
+      "keypoints"
+    ]
+  },
+  {
+    "id": "follow-mode",
+    "category": "Vision",
+    "title": "Follow Mode",
+    "summary": "Reachy tracks and follows detected people by moving his head.",
+    "body": "When YOLO vision is active and **Follow Mode** is enabled, Reachy will automatically move his head to track detected people.\n\n**How it works**: The system uses the bounding box position of the largest detected person to calculate yaw (left/right) and pitch (up/down) adjustments. If the person moves left, Reachy turns left to follow.\n\n**Speed settings**: Three tracking speeds available — slow (gentle following), medium (balanced), and fast (responsive tracking).\n\n**Requirements**: Vision must be actively running (CM4 or WebGPU mode) with a detection task. Motors must be enabled. Follow Mode works with both vision backends.\n\nEnable Follow Mode from the vision controls section in the Conversation tab.",
+    "tags": [
+      "follow",
+      "tracking",
+      "person",
+      "vision",
+      "movement",
+      "head"
+    ]
+  },
+  {
+    "id": "browser-camera",
+    "category": "Vision",
+    "title": "Browser Camera Streaming",
+    "summary": "Stream any browser camera (webcam, phone, USB) to the robot for vision and snapshots.",
+    "body": "You can stream a browser camera to Reachy via the `/ws/camera` WebSocket:\n\n1. Grant camera permission in your browser\n2. Select a camera source (laptop webcam, iPhone Continuity Camera, USB camera)\n3. Frames are sent as binary JPEG at configurable FPS and quality\n\n**What uses the browser camera**: All consumers use a unified Camera Registry, so the AI can take snapshots, record video, or run vision inference from the browser camera — not just the robot's own camera.\n\n**Settings**: `browser_camera_fps` (default 2 FPS), `browser_camera_quality` (JPEG quality 0-100), `active_camera` (switch between robot and browser sources).\n\nThis is useful when the robot camera has an obstructed view or when you want to use a higher-quality external camera.",
+    "tags": [
+      "browser",
+      "camera",
+      "webcam",
+      "streaming",
+      "usb",
+      "continuity",
+      "vision",
+      "snapshot"
+    ]
+  },
+  {
+    "id": "websocket-architecture",
+    "category": "Controls",
+    "title": "WebSocket Architecture",
+    "summary": "Five WebSocket endpoints handle all real-time data — no polling anywhere.",
+    "body": "Hello World uses WebSockets for all real-time communication. No HTTP polling is used:\n\n**`/ws/live`** — The main data stream. Carries robot state (head pose, joints, antennas) at 15Hz and system stats (CPU, RAM, etc.) at 1Hz. Clients send `{\"subscribe\": [\"robot\", \"stats\"]}` to choose what data to receive. Inactive tabs unsubscribe to save bandwidth.\n\n**`/ws/transcribe`** — Broadcasts conversation events: transcriptions, LLM responses, tool calls, TTS audio (as base64 WAV), errors, and status changes. This is read-only from the browser's perspective.\n\n**`/ws/intercom`** — Bidirectional audio pass-through. Browser mic PCM flows to the robot speaker, like a walkie-talkie. Used by the 'Speak Through Robot' button.\n\n**`/ws/browser-mic`** — Browser mic audio sent to the voice listener for transcription. Unlike intercom, this feeds the AI pipeline, not the speaker directly.\n\n**`/ws/camera`** — Browser camera JPEG frames streamed to the robot. Used for remote vision, snapshots, and recording when using a browser camera source.",
+    "tags": [
+      "websocket",
+      "real-time",
+      "live",
+      "streaming",
+      "intercom",
+      "transcribe",
+      "architecture",
+      "subscribe"
+    ]
+  },
+  {
+    "id": "audio-routing",
+    "category": "Controls",
+    "title": "Audio Input & Output Routing",
+    "summary": "Choose between robot mic/speaker and browser mic/speaker for input and output.",
+    "body": "Audio input and output can each be routed independently:\n\n**Input** (`audio_input` setting):\n- `robot` — Uses the robot's built-in microphone (USB XMOS DSP audio device)\n- `browser` — Uses your browser's microphone via WebSocket\n\n**Output** (`audio_output` setting):\n- `robot` — Plays through the robot's built-in speaker (16kHz, USB audio)\n- `bluetooth` — Plays through a paired Bluetooth A2DP speaker/headphone (48kHz)\n\n**Sample rates**: The robot speaker is hardware-limited to 16kHz. Bluetooth supports 48kHz for higher quality music playback. All speech (TTS) is generated at the robot's native 16kHz.\n\n**Supported formats**: MP3, WAV, OGG, FLAC, M4A, AAC. All are decoded via ffmpeg before playback. Music uploads support up to 50MB per file with automatic metadata and album art extraction.",
+    "tags": [
+      "audio",
+      "input",
+      "output",
+      "routing",
+      "robot",
+      "browser",
+      "microphone",
+      "speaker",
+      "bluetooth",
+      "sample rate"
+    ]
+  },
+  {
+    "id": "dreaming-mode",
+    "category": "Controls",
+    "title": "Dreaming Mode",
+    "summary": "Idle screensaver mode that plays random emotions and oscillation patterns.",
+    "body": "When **Dreaming Mode** is enabled, Reachy plays random idle animations when nobody is interacting with it.\n\nThis makes the robot appear alive and curious even when no one is talking to it or controlling it. It cycles through emotions and gentle movement patterns at configurable intervals.\n\nEnable it in **Settings** with the `dreaming_enabled` toggle. Dreaming automatically pauses when someone starts a conversation or uses the joystick.",
+    "tags": [
+      "dreaming",
+      "idle",
+      "screensaver",
+      "animation",
+      "autonomous"
+    ]
+  },
+  {
+    "id": "hardware-overview",
+    "category": "Status & Telemetry",
+    "title": "Reachy Mini Hardware",
+    "summary": "Raspberry Pi CM4, 9 Dynamixel servos, Sony camera, USB audio, and IMU.",
+    "body": "Reachy Mini's hardware stack:\n\n**Compute**: Raspberry Pi CM4 (BCM2711, 4-core ARM Cortex-A72 @ 1.5GHz, 3.7GB RAM, 14.6GB eMMC)\n\n**Motors**: 9 Dynamixel XL330 servos on UART3 at 1Mbaud:\n- Motor 10: Body rotation (yaw, +/-160 degrees)\n- Motors 11-16: Stewart platform (6 actuators for head x/y/z/roll/pitch/yaw)\n- Motors 17-18: Left and right antennas\n\n**Camera**: Sony IMX708 wide-angle (12MP, CSI-2 ribbon cable)\n\n**Audio**: Pollen Robotics USB audio device with XMOS DSP (microphone + speaker)\n\n**IMU**: Bosch BMI088 accelerometer/gyroscope on I2C bus 4\n\n**OS**: Debian 13 (trixie), kernel 6.12, daemon version 1.2.8\n\nThe Status tab can display a full hardware inventory including USB devices, I2C buses, network interfaces, CPU frequency, kernel version, and firmware date.",
+    "tags": [
+      "hardware",
+      "pi",
+      "cm4",
+      "motors",
+      "camera",
+      "audio",
+      "imu",
+      "dynamixel",
+      "specs"
+    ]
+  },
+  {
+    "id": "faq-no-voice",
+    "category": "FAQ",
+    "title": "Reachy won't respond to voice",
+    "summary": "Troubleshoot voice conversation issues.",
+    "body": "If Reachy is not responding to your voice:\n\n1. **Check API keys**: Ensure you have valid keys for STT, LLM, and TTS providers in Settings.\n2. **Start the listener**: Go to Conversation tab and click Start Listener.\n3. **Check thresholds**: Lower the confidence threshold (conf_threshold) and volume threshold (vol_threshold) in Settings.\n4. **Check audio input**: Verify audio_input is set correctly (robot mic or browser mic).\n5. **Mic gain**: Increase mic_gain in Settings if the mic is too quiet.\n6. **Check the Conversation tab**: Look for transcription output — if text appears but no response, the LLM key may be invalid.",
+    "tags": [
+      "troubleshoot",
+      "voice",
+      "microphone",
+      "not working",
+      "faq"
+    ]
+  },
+  {
+    "id": "faq-camera-not-showing",
+    "category": "FAQ",
+    "title": "Camera not showing",
+    "summary": "Troubleshoot missing camera feed.",
+    "body": "If the camera feed is not visible:\n\n1. **Check video_view setting**: Must be set to 'camera' or 'both' (not 'off' or 'simulation').\n2. **Camera hardware**: Reachy uses a Sony IMX708 CSI camera — ensure the ribbon cable is connected.\n3. **Browser camera**: If using a browser camera, grant camera permissions when prompted.\n4. **Refresh**: Hard-refresh the browser (Ctrl+Shift+R) to reconnect the video stream.",
+    "tags": [
+      "camera",
+      "video",
+      "not showing",
+      "troubleshoot",
+      "faq"
+    ]
+  },
+  {
+    "id": "faq-motors",
+    "category": "FAQ",
+    "title": "Motors explained",
+    "summary": "Understanding motor modes and when to use each one.",
+    "body": "Reachy has 9 Dynamixel XL330 servo motors:\n- 1 body rotation motor (yaw, 160 degrees range)\n- 6 Stewart platform actuators (head position/orientation)\n- 2 antenna motors (left/right)\n\n**Enabled**: Full torque. Required for all movement commands.\n**Disabled**: No torque. Head is limp. Use when physically handling the robot.\n**Gravity Compensation**: Partial torque resists gravity. Head can be gently positioned by hand.\n\nIf motors won't enable, check the daemon status: `curl http://reachy:8000/api/daemon/status`",
+    "tags": [
+      "motors",
+      "servo",
+      "torque",
+      "mode",
+      "faq"
+    ]
+  },
+  {
+    "id": "faq-reset",
+    "category": "FAQ",
+    "title": "How to reset everything",
+    "summary": "Reset settings, restart the app, or restart the daemon.",
+    "body": "**Reset settings**: Delete `~/hello_world/settings.json` on the robot and restart the app. This restores all defaults (you will need to re-enter API keys).\n\n**Restart the app** (quick): `curl -s -X POST http://reachy:8000/api/apps/restart-current-app`\n\n**Restart the daemon** (full): SSH into Reachy and run `reachy-restart`. After daemon restart, you MUST wake it up:\n```\ncurl -s -X POST 'http://reachy:8000/api/daemon/start?wake_up=true'\ncurl -s -X POST http://reachy:8000/api/apps/restart-current-app\n```",
+    "tags": [
+      "reset",
+      "restart",
+      "settings",
+      "daemon",
+      "faq"
+    ]
+  }
+]
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@14.1.0/marked.min.js"></script>
+
+<script>
+(function() {
+    // ===== Data =====
+    const topics = JSON.parse(document.getElementById('topics-data').textContent);
+    let activeCategory = '';
+    let searchQuery = '';
+
+    // Derive categories from topics (ordered)
+    const catOrder = ["Getting Started", "Controls", "Status & Telemetry", "Voice & AI", "Vision",
+                      "Media", "Timers & Sounds", "FAQ"];
+    const catMap = {};
+    topics.forEach(t => { catMap[t.category] = (catMap[t.category] || 0) + 1; });
+    const categories = [];
+    catOrder.forEach(name => { if (catMap[name]) categories.push({ name, count: catMap[name] }); });
+    // Any unlisted categories
+    Object.keys(catMap).forEach(name => {
+        if (!catOrder.includes(name)) categories.push({ name, count: catMap[name] });
+    });
+
+    // ===== Init =====
+    marked.setOptions({ breaks: false, gfm: true });
+
+    // ===== Search =====
+    document.getElementById('helpSearch').addEventListener('input', function() {
+        searchQuery = this.value.trim();
+        renderTopics();
+    });
+
+    // ===== Categories =====
+    function renderCategories() {
+        const container = document.getElementById('helpCategories');
+        let html = '<button class="help-category active" data-cat="" title="Show all topics">All</button>';
+        for (const cat of categories) {
+            html += '<button class="help-category" data-cat="' + cat.name + '" title="Filter by ' + cat.name + '">' + cat.name + ' <span class="help-category-count">' + cat.count + '</span></button>';
+        }
+        container.innerHTML = html;
+        container.querySelectorAll('.help-category').forEach(btn => {
+            btn.addEventListener('click', function() {
+                activeCategory = this.dataset.cat;
+                container.querySelectorAll('.help-category').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderTopics();
+            });
+        });
+    }
+
+    // ===== Render topics =====
+    function renderTopics() {
+        const body = document.getElementById('helpTabBody');
+
+        let filtered = topics.slice();
+
+        if (activeCategory) {
+            filtered = filtered.filter(t => t.category === activeCategory);
+        }
+
+        if (searchQuery) {
+            const words = searchQuery.toLowerCase().split(/\s+/);
+            filtered = filtered.filter(t => {
+                const text = [t.title, t.summary, (t.tags || []).join(' '), t.body || ''].join(' ').toLowerCase();
+                return words.every(w => text.includes(w));
+            });
+            filtered.sort((a, b) => {
+                const aTitle = a.title.toLowerCase();
+                const bTitle = b.title.toLowerCase();
+                const aMatch = words.some(w => aTitle.includes(w)) ? 1 : 0;
+                const bMatch = words.some(w => bTitle.includes(w)) ? 1 : 0;
+                return bMatch - aMatch;
+            });
+        }
+
+        document.getElementById('topicCount').textContent = filtered.length + ' topic' + (filtered.length === 1 ? '' : 's');
+
+        if (filtered.length === 0) {
+            body.innerHTML = '<div class="help-empty">No topics found' + (searchQuery ? ' for "' + escapeHtml(searchQuery) + '"' : '') + '.</div>';
+            return;
+        }
+
+        let html = '';
+        let currentCategory = '';
+
+        for (const topic of filtered) {
+            if (!activeCategory && !searchQuery && topic.category !== currentCategory) {
+                currentCategory = topic.category;
+                html += '<div class="help-section-header">' + currentCategory + '</div>';
+            }
+
+            const tags = (topic.tags || []).map(t =>
+                '<span class="help-tag">' + (searchQuery ? highlightText(t, searchQuery) : escapeHtml(t)) + '</span>'
+            ).join('');
+
+            const titleHtml = searchQuery ? highlightText(topic.title, searchQuery) : escapeHtml(topic.title);
+            const summaryHtml = searchQuery ? highlightText(topic.summary, searchQuery) : escapeHtml(topic.summary);
+
+            let snippetHtml = '';
+            if (searchQuery) {
+                const words = searchQuery.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+                const titleLower = (topic.title + ' ' + topic.summary).toLowerCase();
+                const bodyOnly = topic.body || '';
+                const bodyLower = bodyOnly.toLowerCase();
+                const bodyOnlyWords = words.filter(w => bodyLower.includes(w) && !titleLower.includes(w));
+                const anyTitleMatch = words.some(w => titleLower.includes(w));
+                if (bodyOnlyWords.length > 0 || !anyTitleMatch) {
+                    const snippet = extractSnippet(bodyOnly, words);
+                    if (snippet) {
+                        snippetHtml = '<div class="help-topic-snippet">' + highlightText(snippet, searchQuery) + '</div>';
+                    }
+                }
+            }
+
+            html += '<details class="help-topic" id="help-' + topic.id + '">' +
+                '<summary>' +
+                    '<span class="help-topic-title">' + titleHtml + '</span>' +
+                    '<span class="help-topic-summary">' + summaryHtml + '</span>' +
+                    snippetHtml +
+                '</summary>' +
+                '<div class="help-topic-body" data-md="' + topic.id + '">' + escapeHtml(topic.body || '') + '</div>' +
+                (tags ? '<div class="help-tags">' + tags + '</div>' : '') +
+            '</details>';
+        }
+
+        body.innerHTML = html;
+
+        // Render markdown on expand
+        body.querySelectorAll('details.help-topic').forEach(details => {
+            details.addEventListener('toggle', function() {
+                if (!this.open) return;
+                const bodyDiv = this.querySelector('.help-topic-body');
+                if (bodyDiv.dataset.rendered) return;
+                bodyDiv.innerHTML = marked.parse(bodyDiv.textContent);
+                bodyDiv.dataset.rendered = 'true';
+                bodyDiv.querySelectorAll('table').forEach(t => t.classList.add('about-table'));
+                if (searchQuery) highlightDom(bodyDiv, searchQuery);
+            });
+        });
+    }
+
+    // ===== Helpers =====
+    function highlightText(text, query) {
+        if (!query) return escapeHtml(text);
+        const escaped = escapeHtml(text);
+        const words = query.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+        if (!words.length) return escaped;
+        const sorted = words.slice().sort((a, b) => b.length - a.length);
+        const pattern = sorted.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const regex = new RegExp('(' + pattern + ')', 'gi');
+        return escaped.replace(regex, '<mark class="help-highlight">$1</mark>');
+    }
+
+    function highlightDom(container, query) {
+        if (!query || !container) return;
+        const words = query.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+        if (!words.length) return;
+        const sorted = words.slice().sort((a, b) => b.length - a.length);
+        const pattern = sorted.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const regex = new RegExp('(' + pattern + ')', 'gi');
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+            acceptNode: function(node) {
+                const tag = node.parentElement && node.parentElement.tagName;
+                if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'MARK') return NodeFilter.FILTER_REJECT;
+                return regex.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+            }
+        });
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        for (const node of nodes) {
+            const span = document.createElement('span');
+            span.innerHTML = node.textContent.replace(regex, '<mark class="help-highlight">$1</mark>');
+            node.parentNode.replaceChild(span, node);
+        }
+    }
+
+    function extractSnippet(body, words) {
+        const plain = body.replace(/[*_`#\[\]]/g, '').replace(/\n+/g, ' ').replace(/\s+/g, ' ');
+        const lower = plain.toLowerCase();
+        let bestPos = -1;
+        for (const w of words) {
+            const pos = lower.indexOf(w);
+            if (pos !== -1 && (bestPos === -1 || pos < bestPos)) bestPos = pos;
+        }
+        if (bestPos === -1) return '';
+        const start = Math.max(0, bestPos - 40);
+        const end = Math.min(plain.length, bestPos + 80);
+        let snippet = plain.slice(start, end).trim();
+        if (start > 0) snippet = '...' + snippet;
+        if (end < plain.length) snippet += '...';
+        return snippet;
+    }
+
+    function escapeHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
+
+    // ===== Boot =====
+    renderCategories();
+    renderTopics();
+})();
+</script>
+</body>
+</html>
