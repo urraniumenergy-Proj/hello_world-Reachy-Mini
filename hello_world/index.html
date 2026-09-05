@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World - One App to Rule Them All | Reachy Mini Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a26;
+            --bg-card-hover: #222233;
+            --accent: #7c5cfc;
+            --accent-glow: rgba(124, 92, 252, 0.3);
+            --accent-secondary: #5ce0d8;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a8;
+            --text-muted: #606078;
+            --border: #2a2a3a;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(124, 92, 252, 0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(92, 224, 216, 0.06) 0%, transparent 50%);
+            animation: drift 20s ease-in-out infinite alternate;
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-2%, -1%) rotate(1deg); }
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+        h1 {
+            font-size: clamp(4rem, 12vw, 9rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.0;
+            margin-bottom: 1.5rem;
+        }
+        h1 .gradient {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 50%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        h1 .subtitle {
+            display: block;
+            font-size: 0.35em;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 2rem;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        /* Hero Button */
+        .hero-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1rem 2.8rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #fff;
+            background: transparent;
+            border: none;
+            border-radius: 14px;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary), #a78bfa);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
+        .hero-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(124, 92, 252, 0.12), rgba(92, 224, 216, 0.08));
+            z-index: -2;
+        }
+        .hero-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 30px rgba(124, 92, 252, 0.3), 0 0 60px rgba(92, 224, 216, 0.15);
+        }
+        .hero-btn .arrow {
+            transition: transform 0.25s ease;
+        }
+        .hero-btn:hover .arrow {
+            transform: translateX(4px);
+        }
+        /* Video Section */
+        .video-section {
+            max-width: 1100px;
+            margin: -2rem auto 4rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        .video-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 80px rgba(124, 92, 252, 0.15), 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+        .video-label {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        /* Section Layout */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .section-desc {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(124, 92, 252, 0.4);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        .feature-card.wide {
+            grid-column: 1 / -1;
+        }
+        .feature-card img {
+            width: 100%;
+            display: block;
+            border-bottom: 1px solid var(--border);
+        }
+        .feature-card-body {
+            padding: 1.5rem;
+        }
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+        }
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .tag-purple { background: rgba(124, 92, 252, 0.15); color: var(--accent); }
+        .tag-teal { background: rgba(92, 224, 216, 0.15); color: var(--accent-secondary); }
+        .tag-green { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+        .tag-yellow { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+        .tag-red { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+        /* Full-width Feature */
+        .feature-full {
+            margin-bottom: 4rem;
+        }
+        .feature-full-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .feature-full-inner.reverse {
+            direction: rtl;
+        }
+        .feature-full-inner.reverse > * {
+            direction: ltr;
+        }
+        .feature-full-img {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .feature-full-img img {
+            width: 100%;
+            display: block;
+        }
+        .feature-full-text h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .feature-full-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.35rem 0;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .feature-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* Scene Gallery */
+        .scene-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        .scene-gallery img {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .scene-gallery img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+        .scene-label {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+        }
+        /* Tech Stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .tech-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        .tech-item:hover {
+            border-color: rgba(124, 92, 252, 0.4);
+        }
+        .tech-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .tech-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        .tech-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .feature-full-inner,
+            .feature-full-inner.reverse { grid-template-columns: 1fr; direction: ltr; }
+            .scene-gallery { grid-template-columns: 1fr 1fr; }
+            .hero-stats { gap: 1.5rem; }
+        }
+        @media (max-width: 500px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .scene-gallery { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>
+            <span class="gradient">Hello World</span>
+            <span class="subtitle">One App to Rule Them All</span>
+        </h1>
+        <p class="hero-subtitle">
+            The most complete web dashboard for Pollen Robotics' Reachy Mini.
+            146 APIs, 31 AI tools, computer vision, 81 emotions, MuJoCo 3D simulation,
+            voice pipeline, and full system telemetry &mdash; all from your browser.
+        </p>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-number">146</div>
+                <div class="stat-label">API Endpoints</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">81</div>
+                <div class="stat-label">Emotions</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">31</div>
+                <div class="stat-label">AI Tools</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">20</div>
+                <div class="stat-label">Dances</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">20</div>
+                <div class="stat-label">3D Scenes</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">21</div>
+                <div class="stat-label">Robot Skins</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="https://huggingface.co/spaces/panny247/hello_world-demo" class="hero-btn" style="background: linear-gradient(135deg, rgba(124, 92, 252, 0.25), rgba(92, 224, 216, 0.15));">Try Live Demo <span class="arrow">&rarr;</span></a>
+            <a href="docs.html" class="hero-btn">Read the Full Documentation <span class="arrow">&rarr;</span></a>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Video -->
+<div class="video-section">
+    <div class="video-container">
+        <video controls autoplay muted loop>
+            <source src="demo_video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <p class="video-label">Full dashboard walkthrough &mdash; every feature in under 2 minutes</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- System Monitoring -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">System Monitoring</div>
+        <h2>Real-Time System Telemetry</h2>
+        <p class="section-desc">Complete visibility into your robot's hardware state with live-updating charts and diagnostics.</p>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/01_status_dashboard.jpg" alt="Status Dashboard">
+            </div>
+            <div class="feature-full-text">
+                <h3>Status Dashboard</h3>
+                <p>Nine real-time charts streaming over WebSocket at configurable rates. See your robot's health at a glance.</p>
+                <ul class="feature-list">
+                    <li>CPU temperature, load average, and per-core utilization</li>
+                    <li>RAM breakdown (Used, Buffer, Cache) and disk I/O</li>
+                    <li>Network throughput and WiFi signal strength</li>
+                    <li>Fan RPM, thread count (App vs Daemon)</li>
+                    <li>Top processes with CPU/memory usage</li>
+                    <li>Full hardware inventory (board, serial, kernel, firmware)</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-green">WebSocket</span>
+                    <span class="tag tag-purple">15Hz Robot / 1Hz Stats</span>
+                    <span class="tag tag-teal">Raspberry Pi CM4</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner reverse">
+            <div class="feature-full-img">
+                <img src="frames/05_telemetry.jpg" alt="Head Telemetry">
+            </div>
+            <div class="feature-full-text">
+                <h3>Head Telemetry</h3>
+                <p>Live streaming charts for every degree of freedom in Reachy's Stewart platform head mechanism.</p>
+                <ul class="feature-list">
+                    <li>Roll, Pitch, Yaw rotation with real-time graphing</li>
+                    <li>X, Y, Z translation position tracking</li>
+                    <li>Left and Right antenna angle monitoring</li>
+                    <li>Stewart Platform actuator visualization (6 motors)</li>
+                    <li>Head Pose summary with numeric readout</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">6-DOF Stewart Platform</span>
+                    <span class="tag tag-teal">9 Dynamixel Servos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Control & Visualization -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Control & Visualization</div>
+        <h2>Floating Panels & 3D Simulation</h2>
+        <p class="section-desc">Draggable, resizable floating panels let you compose your ideal workspace.</p>
+    </div>
+
+    <div class="feature-full" style="margin-bottom: 2rem;">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/26_floating_panels.jpg" alt="Floating Panels">
+            </div>
+            <div class="feature-full-text">
+                <h3>Composable Floating Panels</h3>
+                <p>Two persistent panels hover above every tab, creating a fully customisable workspace.</p>
+                <ul class="feature-list">
+                    <li><strong>Camera Panel</strong> &mdash; Live WebRTC feed, snapshot, video/audio recording, listen/speak</li>
+                    <li><strong>Joystick Panel</strong> &mdash; 5-axis head control with return-to-center toggle</li>
+                    <li>Supports robot camera, laptop webcam, iPhone Continuity Camera</li>
+                    <li>Draggable, resizable, minimisable &mdash; position remembered across sessions</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Draggable</span>
+                    <span class="tag tag-teal">Resizable</span>
+                    <span class="tag tag-green">Multi-Camera</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <img src="frames/03_3d_simulation.jpg" alt="MuJoCo 3D Simulation">
+            <div class="feature-card-body">
+                <h3>MuJoCo 3D Simulation</h3>
+                <p>Real-time 3D visualization of Reachy Mini powered by MuJoCo and Three.js. The robot's pose mirrors the physical hardware in real time with smooth-shaded GLB meshes.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">MuJoCo</span>
+                    <span class="tag tag-teal">Three.js</span>
+                    <span class="tag tag-green">Real-time Sync</span>
+                </div>
+            </div>
+        </div>
+        <div class="feature-card">
+            <img src="frames/04_joystick_cameras.jpg" alt="Joystick & Cameras">
+            <div class="feature-card-body">
+                <h3>Joystick & Multi-Camera</h3>
+                <p>Intuitive joystick controls for head movement (L/XY/R), look direction, Z/Roll, body rotation, and a reset button. Multiple camera feeds in floating panels &mdash; robot camera, FaceTime, and iPhone via WebRTC.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">6-axis Control</span>
+                    <span class="tag tag-teal">WebRTC Cameras</span>
+                    <span class="tag tag-yellow">Return to Center</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-full" style="margin-top: 2rem;">
+        <div class="feature-full-inner reverse">
+            <div class="feature-full-img">
+                <img src="frames/27_continuity_camera.png" alt="Camera source selector showing iPhone and FaceTime cameras">
+            </div>
+            <div class="feature-full-text">
+                <h3>Any Camera, Anywhere</h3>
+                <p>Use your iPhone as a wireless camera via Apple Continuity Camera, your MacBook's FaceTime HD camera, or Reachy's onboard camera &mdash; all selectable from a single dropdown. Every video source works with YOLO vision, Follow mode, and recording.</p>
+                <ul class="feature-list">
+                    <li><strong>Reachy's Camera</strong> &mdash; onboard wide-angle via CSI-2</li>
+                    <li><strong>iPhone Continuity Camera</strong> &mdash; wireless, zero-config</li>
+                    <li><strong>FaceTime HD</strong> &mdash; laptop webcam via WebRTC</li>
+                    <li>Hot-swap between sources without restarting</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Continuity Camera</span>
+                    <span class="tag tag-teal">WebRTC</span>
+                    <span class="tag tag-green">Hot-Swap</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-full" style="margin-top: 2rem;">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/28_chrome_flags.png" alt="Chrome flags setting for insecure origins treated as secure">
+            </div>
+            <div class="feature-full-text">
+                <h3>One-Time Browser Setup</h3>
+                <p>Since the dashboard runs on HTTP (not HTTPS), Chrome blocks camera access by default. A one-time flag enables WebRTC on your local network &mdash; paste your dashboard URL into <code>chrome://flags/#unsafely-treat-insecure-origin-as-secure</code> and set it to <strong>Enabled</strong>.</p>
+                <ul class="feature-list">
+                    <li>Navigate to <strong>chrome://flags</strong> and search for "insecure"</li>
+                    <li>Add your dashboard URL (e.g. <code>http://reachy-mini.local:8042</code>)</li>
+                    <li>Set to <strong>Enabled</strong> and relaunch Chrome</li>
+                    <li>iPhone, FaceTime, and laptop cameras now appear in the dropdown</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-yellow">Required for Camera</span>
+                    <span class="tag tag-purple">chrome://flags</span>
+                    <span class="tag tag-teal">One-Time Setup</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Expressive Movement -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Expressive Movement</div>
+        <h2>81 Emotions, 20 Dances, 6 Oscillations</h2>
+        <p class="section-desc">A rich library of pre-built movements organized by mood category, with live preview in the 3D simulation.</p>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/06_emotions_gallery.jpg" alt="Emotions Gallery">
+            </div>
+            <div class="feature-full-text">
+                <h3>Emotions Gallery</h3>
+                <p>Browse and trigger 81 unique emotional expressions, filterable by mood categories.</p>
+                <ul class="feature-list">
+                    <li>Categories: Angry, Confused, Curious, Dance, Fear, Happy, Mood, Response</li>
+                    <li>Each emotion card shows name, duration, and description</li>
+                    <li>Auto-fit toggle adapts motion to robot's range</li>
+                    <li>Real-time preview in 3D simulation and on physical robot</li>
+                    <li>Search bar for quick access to specific emotions</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">81 Emotions</span>
+                    <span class="tag tag-teal">20 Dances</span>
+                    <span class="tag tag-green">HuggingFace Datasets</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner reverse">
+            <div class="feature-full-img">
+                <img src="frames/07_oscillations.jpg" alt="Oscillation Patterns">
+            </div>
+            <div class="feature-full-text">
+                <h3>Oscillation Patterns</h3>
+                <p>Continuous, looping head movement patterns with adjustable amplitude and speed for natural idle behaviour.</p>
+                <ul class="feature-list">
+                    <li><strong>Sway</strong> &mdash; Gentle side-to-side head movement</li>
+                    <li><strong>Nod</strong> &mdash; Slow vertical nodding</li>
+                    <li><strong>Circle</strong> &mdash; Circular head motion</li>
+                    <li><strong>Breathe</strong> &mdash; Subtle breathing-like oscillation</li>
+                    <li><strong>Figure 8</strong> &mdash; Figure-eight head pattern</li>
+                    <li><strong>Look Around</strong> &mdash; Curious, exploratory movement</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Amplitude Control</span>
+                    <span class="tag tag-teal">Speed Control</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AI Conversation -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">AI-Powered</div>
+        <h2>Conversational AI with Tool Use</h2>
+        <p class="section-desc">Chat with Reachy using multi-provider LLMs. The AI can express emotions, set timers, create content, and control the robot.</p>
+    </div>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <img src="frames/08_conversation_ai.jpg" alt="AI Conversation">
+            <div class="feature-card-body">
+                <h3>Multi-Provider AI Chat</h3>
+                <p>Full conversation interface with timestamped message log showing confidence and volume. Powered by LiteLLM for unified access to Anthropic, OpenAI, Ollama, and more. The AI triggers emotional expressions automatically based on context.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Claude</span>
+                    <span class="tag tag-teal">OpenAI</span>
+                    <span class="tag tag-green">Ollama</span>
+                    <span class="tag tag-yellow">LiteLLM</span>
+                </div>
+            </div>
+        </div>
+        <div class="feature-card">
+            <img src="frames/12_timers_ambient.jpg" alt="AI Tool Use">
+            <div class="feature-card-body">
+                <h3>31 Built-in AI Tools</h3>
+                <p>The LLM can call robot-native tools: set timers, trigger emotions, create scratchpad content, play music, control lights, take snapshots, detect objects, and more. Tool calls are displayed inline in the conversation with full transparency.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">set_timer</span>
+                    <span class="tag tag-teal">create_scratchpad</span>
+                    <span class="tag tag-green">play_emotion</span>
+                    <span class="tag tag-yellow">31 Tools Total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Scratchpad & Generative UI -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Generative UI</div>
+        <h2>Scratchpad &mdash; Rich Content from Conversation</h2>
+        <p class="section-desc">The AI creates rich HTML content on demand: recipes, diagrams, charts, and more &mdash; all rendered beautifully in the Scratchpad tab.</p>
+    </div>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <img src="frames/10_scratchpad_recipe.jpg" alt="Scratchpad Recipe">
+            <div class="feature-card-body">
+                <h3>AI-Generated Content</h3>
+                <p>Ask Reachy for a pancake recipe and it creates a beautifully formatted page with ingredients, step-by-step instructions, and tips &mdash; complete with a themed robot illustration.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Markdown Rendering</span>
+                    <span class="tag tag-teal">Theme-Aware</span>
+                </div>
+            </div>
+        </div>
+        <div class="feature-card">
+            <img src="frames/09_scratchpad_diagrams.jpg" alt="Scratchpad Diagrams">
+            <div class="feature-card-body">
+                <h3>Mermaid Diagrams & Charts</h3>
+                <p>Interactive architecture diagrams rendered with Mermaid.js, pie charts, activity heatmaps, and more. The AI can generate visual documentation of the robot's own architecture.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Mermaid.js</span>
+                    <span class="tag tag-teal">Charts</span>
+                    <span class="tag tag-green">Searchable</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Timers & Ambient -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Smart Assistant</div>
+        <h2>Timers, Alarms & Ambient Sounds</h2>
+        <p class="section-desc">Set timers via conversation or the UI. Built-in ambient sound library for focus, relaxation, or atmosphere.</p>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/11_ai_tool_use.jpg" alt="Timers and Ambient Sounds">
+            </div>
+            <div class="feature-full-text">
+                <h3>Timers, Alarms & Soundscapes</h3>
+                <p>A complete timer and alarm system with rich sound options.</p>
+                <ul class="feature-list">
+                    <li>Create timers via AI conversation ("Set a timer for 5 mins")</li>
+                    <li>Named alarms with one-shot or recurring schedules</li>
+                    <li>9 ambient sounds: Rain, Ocean, Forest, Crickets, Fireplace, Wind, White/Pink/Brown Noise</li>
+                    <li>3 timer sounds: Bell, Ding, Success</li>
+                    <li>6 alarm sounds: Birds, Classic Bell, Digital, Gentle Chime, Harp, Marimba</li>
+                    <li>Upload custom sounds with Add Sound</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Voice-Activated</span>
+                    <span class="tag tag-teal">9 Ambient Sounds</span>
+                    <span class="tag tag-green">Custom Upload</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Computer Vision -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Computer Vision</div>
+        <h2>YOLO Vision &mdash; Real-Time Detection</h2>
+        <p class="section-desc">On-device and in-browser computer vision with pose estimation, object detection, and segmentation.</p>
+    </div>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <img src="frames/14_vision_settings.jpg" alt="Vision Settings">
+            <div class="feature-card-body">
+                <h3>YOLO Vision Configuration</h3>
+                <p>Three processing modes: Off, CM4 (on-robot), and WebGPU (in-browser via WASM). Choose from pose keypoints, detection, or segmentation tasks. Adjustable FPS, confidence threshold, and model size selection.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">WebGPU / WASM</span>
+                    <span class="tag tag-teal">CM4 On-Device</span>
+                    <span class="tag tag-green">YOLO Nano</span>
+                </div>
+            </div>
+        </div>
+        <div class="feature-card">
+            <img src="frames/15_pose_detection.jpg" alt="Pose Detection">
+            <div class="feature-card-body">
+                <h3>Real-Time Pose Detection</h3>
+                <p>Blue skeleton overlay tracks body keypoints in real time from any connected camera. Supports Follow mode where the robot tracks detected poses. Works with robot camera, FaceTime, or iPhone sources.</p>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Pose Keypoints</span>
+                    <span class="tag tag-teal">Follow Mode</span>
+                    <span class="tag tag-yellow">Multi-Camera Source</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Shell Terminal -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Developer Tools</div>
+        <h2>In-Browser Shell Terminal</h2>
+        <p class="section-desc">Full bash terminal access via WebSocket PTY with shared tmux sessions.</p>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/13_shell_terminal.jpg" alt="Shell Terminal">
+            </div>
+            <div class="feature-full-text">
+                <h3>WebSocket Terminal</h3>
+                <p>A fully interactive terminal embedded in the dashboard, powered by tmux for persistent, shared sessions.</p>
+                <ul class="feature-list">
+                    <li>Bidirectional PTY via WebSocket</li>
+                    <li>Terminal and Tmux tab modes</li>
+                    <li>Shared sessions &mdash; multiple users, same terminal</li>
+                    <li>Connection status indicator</li>
+                    <li>Full process visibility (ps aux)</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">WebSocket PTY</span>
+                    <span class="tag tag-teal">tmux</span>
+                    <span class="tag tag-green">Shared Sessions</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Media Library -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Media Management</div>
+        <h2>Snapshots, Recordings & Music</h2>
+        <p class="section-desc">Capture, record, and playback media directly from the dashboard with thumbnail previews and metadata.</p>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner reverse">
+            <div class="feature-full-img">
+                <img src="frames/21_media_tab.jpg" alt="Media Library">
+            </div>
+            <div class="feature-full-text">
+                <h3>Media Library</h3>
+                <p>A built-in media manager for all your robot's captures and audio content.</p>
+                <ul class="feature-list">
+                    <li>Camera snapshots with preview grid</li>
+                    <li>Video recordings with duration and thumbnails</li>
+                    <li>Audio recordings with waveform visualization</li>
+                    <li>Music library with ID3 metadata and cover art</li>
+                    <li>Upload, download, and delete with drag-and-drop</li>
+                    <li>NVR (Network Video Recorder) camera snapshots</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Snapshots</span>
+                    <span class="tag tag-teal">Video Recording</span>
+                    <span class="tag tag-green">Music Playback</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Audio & Bluetooth -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Audio & Connectivity</div>
+        <h2>Volume Mixer, Audio Routing & Bluetooth</h2>
+        <p class="section-desc">Fine-grained audio control with channel mixing and Bluetooth A2DP device management.</p>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner reverse">
+            <div class="feature-full-img">
+                <img src="frames/16_audio_settings.jpg" alt="Audio Settings">
+            </div>
+            <div class="feature-full-text">
+                <h3>Audio Routing & Volume Mixer</h3>
+                <p>Complete audio pipeline management with per-channel volume control.</p>
+                <ul class="feature-list">
+                    <li>Mic Input and Speaker routing (Robot Mic / Robot Speaker)</li>
+                    <li>6 volume channels: Hardware, Master, Speech, Music, Effects, Ambient</li>
+                    <li>Bluetooth device scanning and pairing</li>
+                    <li>A2DP (high-quality music) and HSP (voice) profiles</li>
+                    <li>AuraBox LED speaker integration</li>
+                    <li>Test button for audio output verification</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">6 Volume Channels</span>
+                    <span class="tag tag-teal">Bluetooth A2DP</span>
+                    <span class="tag tag-green">GStreamer Pipeline</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LLM Configuration -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Configurability</div>
+        <h2>Tuning & LLM Behaviour</h2>
+        <p class="section-desc">Full control over voice recognition thresholds and the LLM's personality through an editable system prompt.</p>
+    </div>
+
+    <div class="feature-full">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/17_tuning_llm.jpg" alt="Tuning and LLM Settings">
+            </div>
+            <div class="feature-full-text">
+                <h3>Tuning & System Prompt</h3>
+                <p>Adjust voice recognition sensitivity and customise Reachy's AI personality.</p>
+                <ul class="feature-list">
+                    <li>Confidence threshold for speech recognition</li>
+                    <li>Volume threshold to filter background noise</li>
+                    <li>Microphone gain control</li>
+                    <li>Editable system prompt defining Reachy's personality</li>
+                    <li>TTS speech output rules built into the prompt</li>
+                    <li>Save/Reset prompt functionality</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">Whisper STT</span>
+                    <span class="tag tag-teal">Kokoro TTS</span>
+                    <span class="tag tag-green">Editable Prompt</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 3D Scenes & Skins -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Customisation</div>
+        <h2>20 Scenes & 21 Robot Skins</h2>
+        <p class="section-desc">Personalise the 3D simulation with procedural environments and paint Reachy in country flags, metallic finishes, or vibrant gradients.</p>
+    </div>
+
+    <div class="feature-full" style="margin-bottom: 2rem;">
+        <div class="feature-full-inner">
+            <div class="feature-full-img">
+                <img src="frames/18_scenes_skins.jpg" alt="3D Scenes and Robot Skins">
+            </div>
+            <div class="feature-full-text">
+                <h3>Scenes & Skins Gallery</h3>
+                <p>A rich collection of 3D environments and robot textures, instantly switchable from the Appearance settings.</p>
+                <ul class="feature-list">
+                    <li><strong>20 scenes:</strong> Default, Studio, Sunset, Ocean, Night Sky, Forest, Neon, Rainy City, Winter, Desert, Underwater Cave, Mars, Crystal Cave, Volcano, Candy Land, Zen Garden, Haunted, Space Station, Clouds</li>
+                    <li><strong>21 skins:</strong> Default, France, Japan, USA, Brazil, Germany, Italy, UK, India, Australia, Gold, Chrome, Matte Black, Carbon, Rainbow, Neon, Sunset, Ocean, Forest, Pollen, Robot</li>
+                </ul>
+                <div class="tag-row">
+                    <span class="tag tag-purple">20 Scenes</span>
+                    <span class="tag tag-teal">21 Skins</span>
+                    <span class="tag tag-green">Instant Switch</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scene-gallery">
+        <div>
+            <img src="frames/24_crystal_cave.jpg" alt="Crystal Cave Scene">
+            <p class="scene-label">Crystal Cave</p>
+        </div>
+        <div>
+            <img src="frames/25_clouds_full.jpg" alt="Clouds Scene">
+            <p class="scene-label">Clouds</p>
+        </div>
+        <div>
+            <img src="frames/22_brazil_skin.jpg" alt="Brazil Skin">
+            <p class="scene-label">Brazil Skin</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Tech Stack -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Architecture</div>
+        <h2>Built With</h2>
+        <p class="section-desc">Pure Python + vanilla JavaScript. No framework, no bundler, no build step.</p>
+    </div>
+
+    <div class="tech-grid">
+        <div class="tech-item">
+            <div class="tech-icon">&#9889;</div>
+            <h4>FastAPI</h4>
+            <p>146 REST endpoints + 6 WebSockets</p>
+        </div>
+        <div class="tech-item">
+            <div class="tech-icon">&#127760;</div>
+            <h4>Vanilla JS</h4>
+            <p>Zero dependencies, SPA</p>
+        </div>
+        <div class="tech-item">
+            <div class="tech-icon">&#129302;</div>
+            <h4>MuJoCo + Three.js</h4>
+            <p>Physics-accurate 3D simulation</p>
+        </div>
+        <div class="tech-item">
+            <div class="tech-icon">&#128065;</div>
+            <h4>YOLO + WebGPU</h4>
+            <p>Real-time vision in browser</p>
+        </div>
+        <div class="tech-item">
+            <div class="tech-icon">&#128483;</div>
+            <h4>Whisper STT</h4>
+            <p>Voice recognition pipeline</p>
+        </div>
+        <div class="tech-item">
+            <div class="tech-icon">&#128264;</div>
+            <h4>Kokoro TTS</h4>
+            <p>Text-to-speech engine</p>
+        </div>
+        <div class="tech-item">
+            <div class="tech-icon">&#129504;</div>
+            <h4>LiteLLM</h4>
+            <p>Multi-provider AI (Claude, GPT, Ollama)</p>
+        </div>
+        <div class="tech-item">
+            <div class="tech-icon">&#128268;</div>
+            <h4>WebSocket-First</h4>
+            <p>All real-time data, zero polling</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>
+        Hello World &mdash; One App to Rule Them All &mdash; Built by
+        <a href="https://huggingface.co/spaces/panny247/hello_world" target="_blank">panny247</a>
+        for the Pollen Robotics community
+    </p>
+    <p style="margin-top: 0.5rem;">
+        <a href="docs.html">Full Documentation</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://huggingface.co/spaces/panny247/hello_world" target="_blank">View on HuggingFace</a>
+    </p>
+</footer>
+
+</body>
+</html>
